@@ -8,7 +8,7 @@ module.exports = {
         "bg-dimmed": "#121212",
         text: "#ffffff",
         "text-dimmed": "#b3b3b3",
-        primary: "#40e0d0",
+        primary: "#8338ec",
       },
     },
   },
