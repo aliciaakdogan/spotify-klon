@@ -43,9 +43,6 @@ export default function PlayerVolume({ player }) {
           className="absolute inset-0 opacity-0"
         />
       </div>
-      <div className="">
-        <PlayerVolume />
-      </div>
     </div>
   );
 }

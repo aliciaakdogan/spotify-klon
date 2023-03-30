@@ -74,7 +74,7 @@ export default function Player() {
 
   return (
     <div className="flex items-center p-4">
-      <div className="flex items-center">
+      <div className="flex flex-1 items-center">
         <img
           src={track.album.images[0].url}
           alt=""
@@ -85,7 +85,7 @@ export default function Player() {
           <p className="text-xs text-text-dimmed">{track.artists[0].name} </p>
         </div>
       </div>
-      <div className="flex-1 text-center">
+      <div className="flex-1 text-center max-md:hidden">
         <PlayerControls
           player={localPlayer}
           isPaused={isPaused}
@@ -93,7 +93,7 @@ export default function Player() {
           track={track}
         />
       </div>
-      <div className="">
+      <div className="flex flex-1 justify-end max-md:hidden">
         <PlayerVolume />
       </div>
     </div>
