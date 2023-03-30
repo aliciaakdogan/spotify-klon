@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { spotifyApi } from "@/pages/_app";
 import PlayerControls from "./PlayerControls";
 import PlayerVolume from "./PlayerVolume";
+import PlayerOverlay from "./PlayerOverlay";
 
 export default function Player() {
   const [device, setDevice] = useState(null);
@@ -9,6 +10,8 @@ export default function Player() {
   const [track, setTrack] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
   const [position, setPosition] = useState(null);
+  const [playerOverlayIsOpen, setPlayerOverlayIsOpen] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem("spotify-key");
@@ -43,22 +46,18 @@ export default function Player() {
         setTrack(state.track_window.current_track);
         setIsPaused(state.paused);
         setPosition(state.position);
+        player.getCurrentState().then((state) => {
+          if (!state) {
+            setIsActive(false);
+          } else {
+            setIsActive(true);
+          }
+        });
       });
 
       player.connect();
     };
   }, []);
-
-  useEffect(() => {
-    async function getPlayback() {
-      if (device) {
-        await spotifyApi.transferMyPlayback([device], true);
-      }
-      await spotifyApi.getMyDevices();
-    }
-
-    getPlayback();
-  }, [device]);
 
   useEffect(() => {
     if (!localPlayer) return;
@@ -70,32 +69,47 @@ export default function Player() {
     };
   }, [localPlayer]);
 
-  if (!localPlayer || !track) return <div>no player, please connect</div>;
+  if (!isActive || !track) return <div>no player, please connect</div>;
 
   return (
-    <div className="flex items-center p-4">
-      <div className="flex flex-1 items-center">
-        <img
-          src={track.album.images[0].url}
-          alt=""
-          className=" flex-shrink-9 mr-4 h-14 w-14"
-        />
-        <div>
-          <h4 className="text-sm">{track.name} </h4>
-          <p className="text-xs text-text-dimmed">{track.artists[0].name} </p>
+    <div>
+      <div
+        className="flex items-center p-4"
+        onClick={() => {
+          setPlayerOverlayIsOpen(!playerOverlayIsOpen);
+        }}
+      >
+        <div className="flex flex-1 items-center">
+          <img
+            src={track.album.images[0].url}
+            alt=""
+            className=" flex-shrink-9 mr-4 h-14 w-14"
+          />
+          <div>
+            <h4 className="text-sm">{track.name} </h4>
+            <p className="text-xs text-text-dimmed">{track.artists[0]?.name}</p>
+          </div>
+        </div>
+        <div className="flex-1 text-center max-md:hidden">
+          <PlayerControls
+            player={localPlayer}
+            isPaused={isPaused}
+            position={position}
+            track={track}
+          />
+        </div>
+        <div className="flex flex-1 justify-end max-md:hidden">
+          <PlayerVolume player={localPlayer} />
         </div>
       </div>
-      <div className="flex-1 text-center max-md:hidden">
-        <PlayerControls
-          player={localPlayer}
-          isPaused={isPaused}
-          position={position}
-          track={track}
-        />
-      </div>
-      <div className="flex flex-1 justify-end max-md:hidden">
-        <PlayerVolume />
-      </div>
+      <PlayerOverlay
+        setPlayerOverlayIsOpen={setPlayerOverlayIsOpen}
+        playerOverlayIsOpen={playerOverlayIsOpen}
+        player={localPlayer}
+        isPaused={isPaused}
+        position={position}
+        track={track}
+      />
     </div>
   );
 }
