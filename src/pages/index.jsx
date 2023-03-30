@@ -5,7 +5,9 @@ import React from "react";
 export default function index() {
   return (
     <Layout>
-      <div>hej från min sida</div>
+      <div>
+        <h1 className="text-4xl font-bold">Welcome to my Spotify </h1>
+      </div>
     </Layout>
   );
 }
