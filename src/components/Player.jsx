@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { spotifyApi } from "@/pages/_app";
 import PlayerControls from "./PlayerControls";
+import PlayerVolume from "./PlayerVolume";
 
 export default function Player() {
   const [device, setDevice] = useState(null);
@@ -92,7 +93,9 @@ export default function Player() {
           track={track}
         />
       </div>
-      <div className="">volume</div>
+      <div className="">
+        <PlayerVolume />
+      </div>
     </div>
   );
 }
