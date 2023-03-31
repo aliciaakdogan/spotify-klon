@@ -1,12 +1,37 @@
 import React, { useState } from "react";
 import { Volume1, VolumeX, Volume2 } from "react-feather";
+import { spotifyApi } from "@/pages/_app";
 
 export default function PlayerVolume({ player }) {
-  const [volume, setVolume] = useState(0, 5);
+  const [volume, setVolume] = useState(0.5);
 
   return (
     <div className="flex items-center gap-2 ">
-      {volume > 0.5 ? <Volume2 /> : volume > 0 ? <Volume1 /> : <VolumeX />}
+      {volume > 0.5 ? (
+        <Volume2
+          className="opacity-80 hover:opacity-100"
+          onClick={() => {
+            spotifyApi.setVolume(0);
+            setVolume(0);
+          }}
+        />
+      ) : volume > 0 ? (
+        <Volume1
+          className="opacity-80 hover:opacity-100"
+          onClick={() => {
+            spotifyApi.setVolume(0);
+            setVolume(0);
+          }}
+        />
+      ) : (
+        <VolumeX
+          className="opacity-80 hover:opacity-100"
+          onClick={() => {
+            spotifyApi.setVolume(40);
+            setVolume(0.4);
+          }}
+        />
+      )}
 
       <div className="group relative w-36">
         <label
@@ -38,7 +63,7 @@ export default function PlayerVolume({ player }) {
           value={volume}
           onChange={(e) => setVolume(e.target.value)}
           onMouseUp={() => {
-            player.setVolume(volume);
+            spotifyApi.setVolume(volume * 100);
           }}
           className="absolute inset-0 opacity-0"
         />

@@ -54,6 +54,14 @@ export default function Playlist() {
             <div
               key={item.id}
               className=" group grid  grid-cols-[auto_1fr_auto] items-center gap-4 py-1.5 px-6 text-sm hover:bg-text-dimmed/10  md:grid-cols-[auto_1fr_1fr_auto]"
+              onClick={async () => {
+                await spotifyApi.play({
+                  context_uri: `spotify:playlist:${router.query.id}`,
+                  offset: {
+                    position: index,
+                  },
+                });
+              }}
             >
               <div className=" w-8 text-base">
                 <p className="group-hover:hidden">{index + 1}</p>
@@ -68,9 +76,7 @@ export default function Playlist() {
                 />
 
                 <div className="overflow-hidden">
-                  <h4 className="truncate text-text">
-                    {item.track.album.name}
-                  </h4>
+                  <h4 className="truncate text-text">{item.track.name}</h4>
                   <p className="truncate">{item.track.artists[0].name} </p>
                 </div>
               </div>
